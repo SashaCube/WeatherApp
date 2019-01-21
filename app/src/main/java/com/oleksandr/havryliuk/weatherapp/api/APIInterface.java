@@ -1,8 +1,6 @@
 package com.oleksandr.havryliuk.weatherapp.api;
+import com.oleksandr.havryliuk.weatherapp.api.models.Data;
 
-import com.oleksandr.havryliuk.weatherapp.Weather;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -14,7 +12,6 @@ public interface APIInterface {
     String APP_ID = "98eaf2c433ce1765a54018269be854e8";
 
     @GET("data/2.5/weather?q={city}&appid={APP_ID}")
-    Call<Weather> getWeaterByCity(@Path("city") String city, @Path("appid") String appId);
-
-
+    Call<Data> getWeaterByCity(@Path("city") String city, @Path("appid") String appId);
+    
 }
