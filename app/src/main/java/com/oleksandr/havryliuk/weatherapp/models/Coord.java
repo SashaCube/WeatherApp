@@ -2,23 +2,14 @@ package com.oleksandr.havryliuk.weatherapp.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 public class Coord {
 
-    @SerializedName("lon")
-    @Expose
-    private Double lon;
     @SerializedName("lat")
     @Expose
     private Double lat;
-
-    public Double getLon() {
-        return lon;
-    }
-
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
+    @SerializedName("lon")
+    @Expose
+    private Double lon;
 
     public Double getLat() {
         return lat;
@@ -26,6 +17,14 @@ public class Coord {
 
     public void setLat(Double lat) {
         this.lat = lat;
+    }
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
     }
 
 }
