@@ -15,124 +15,68 @@
         android:orientation="horizontal">
 
         <EditText
-            android:layout_weight="1"
             android:id="@+id/city_et"
-            android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
             android:hint="input your city .." />
 
         <Button
             android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="5"
-            android:text="W"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:text="W" />
 
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/colorPrimary" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="20">
+        android:layout_weight="100"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/city_tv"
-            android:text="Kiev"
-            android:layout_margin="15dp"
-            android:textSize="20dp"
-            android:textStyle="bold"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="Kiev"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/colorPrimary" />
 
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|top"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_margin="15dp"
-                android:text="Weather"
-                android:textSize="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/colorPrimary"/>
-            <TextView
-                android:text="main"
-                android:layout_margin="5dp"
-                android:textSize="10sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_margin="15dp"
-                    android:id="@+id/main_tv"
-                    android:text="main"
-                    android:textSize="18dp"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:scrollbars="vertical">
 
-                <TextView
-                    android:id="@+id/weather_icon"
-                    android:text="icon"
-                    android:textSize="18dp"
-                    android:layout_margin="15dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
+                </android.support.v7.widget.RecyclerView>
             </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/colorPrimary"/>
-
-            <TextView
-                android:text="description"
-                android:textSize="10sp"
-                android:labelFor="@+id/description_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_margin="15dp"
-                android:id="@+id/description_tv"
-                android:layout_gravity="start"
-                android:text="Weather"
-                android:textSize="14dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
 
     </LinearLayout>
 
