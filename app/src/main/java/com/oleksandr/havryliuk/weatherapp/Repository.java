@@ -1,17 +1,11 @@
 package com.oleksandr.havryliuk.weatherapp;
 
-import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.persistence.room.Update;
-import android.support.annotation.Nullable;
 
 import com.oleksandr.havryliuk.weatherapp.api.APIInterface;
 import com.oleksandr.havryliuk.weatherapp.api.RetrofitClient;
 import com.oleksandr.havryliuk.weatherapp.models.Data;
-import com.oleksandr.havryliuk.weatherapp.models.Weather;
 import com.oleksandr.havryliuk.weatherapp.room.MyWeather;
 import com.oleksandr.havryliuk.weatherapp.room.MyWeatherDao;
 import com.oleksandr.havryliuk.weatherapp.room.WeatherRoomDatabase;
@@ -29,7 +23,6 @@ public class Repository {
 
     private MyWeatherDao myWeatherDao;
     private APIInterface client;
-    private MutableLiveData<List<MyWeather>> forecast = new MutableLiveData<>();
     private Executor executor;
 
     private static Repository INSTANCE;
@@ -49,7 +42,7 @@ public class Repository {
         return myWeatherDao.getWeatherByCity(city);
     }
 
-    public LiveData<List<MyWeather>> loadForecast(String city) {
+    public void loadForecast(String city) {
 
         Call<Data> call = client.getWeaterByCity(city, APIInterface.APP_ID);
         call.enqueue(new Callback<Data>() {
@@ -59,7 +52,6 @@ public class Repository {
                     return;
                 }
                 Data data = response.body();
-                forecast.setValue(Helper.weatherConverter(data));
                 updateForecast(data);
             }
 
@@ -68,7 +60,6 @@ public class Repository {
 
             }
         });
-        return forecast;
     }
 
     public void updateForecast(Data data) {
