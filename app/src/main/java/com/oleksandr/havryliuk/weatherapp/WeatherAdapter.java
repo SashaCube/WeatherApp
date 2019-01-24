@@ -8,15 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.oleksandr.havryliuk.weatherapp.models.List;
+import com.oleksandr.havryliuk.weatherapp.room.MyWeather;
+
+import java.util.List;
 
 
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.MyViewHolder> {
 
-    private java.util.List<List> lists;
+    private java.util.List<MyWeather> lists;
     private Context context;
 
-    public WeatherAdapter(java.util.List<List> articles, Context context) {
+    public WeatherAdapter(List<MyWeather> articles, Context context) {
         this.lists = articles;
         this.context = context;
     }
@@ -33,14 +35,14 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         final MyViewHolder viewHolder = myViewHolder;
 
-        List model = lists.get(i);
+        MyWeather model = lists.get(i);
 
-        viewHolder.time.setText(Helper.DateToTimeFormat(model.getDt().toString()));
-        viewHolder.main.setText(model.getWeather().get(0).getMain());
-        viewHolder.temp.setText(model.getMain().getTemp().toString() + " K");
-        viewHolder.humidity.setText(model.getMain().getHumidity() + "%");
-        viewHolder.cloudiness.setText(model.getClouds().getAll() + "%");
-        viewHolder.pressure.setText(model.getMain().getPressure().toString());
+        viewHolder.time.setText(model.getTime().toString());
+        viewHolder.main.setText(model.getMain());
+        viewHolder.temp.setText(model.getTemp() + " K");
+        viewHolder.humidity.setText(model.getHumidity() + "%");
+        viewHolder.cloudiness.setText(model.getCloudiness() + "%");
+        viewHolder.pressure.setText(model.getPressure().toString());
     }
 
     @Override
@@ -62,5 +64,11 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.MyViewHo
             cloudiness = itemView.findViewById(R.id.cloudiness);
             pressure = itemView.findViewById(R.id.pressure);
         }
+    }
+
+    public void clear() {
+        final int size = lists.size();
+        lists.clear();
+        notifyItemRangeRemoved(0, size);
     }
 }

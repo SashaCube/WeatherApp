@@ -1,12 +1,18 @@
 package com.oleksandr.havryliuk.weatherapp;
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
-
+import android.os.AsyncTask;
+;
 import com.oleksandr.havryliuk.weatherapp.api.APIInterface;
 import com.oleksandr.havryliuk.weatherapp.api.RetrofitClient;
 import com.oleksandr.havryliuk.weatherapp.models.Data;
+import com.oleksandr.havryliuk.weatherapp.models.List;
+import com.oleksandr.havryliuk.weatherapp.room.MyWeather;
+import com.oleksandr.havryliuk.weatherapp.room.MyWeatherDao;
+import com.oleksandr.havryliuk.weatherapp.room.WeatherRoomDatabase;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,49 +21,69 @@ import retrofit2.Response;
 public class Repository {
 
     private APIInterface client;
-    private MutableLiveData<Data> forecast;
+    private MyWeatherDao myWeatherDao;
+    private LiveData<java.util.List<MyWeather>> forecast;
 
     private static Repository INSTANCE;
 
-    public static Repository getRepository(){
-        if(INSTANCE == null){
+    public static Repository getRepository(Application application){
+        if(INSTANCE == null) {
             INSTANCE = new Repository();
+            WeatherRoomDatabase db = WeatherRoomDatabase.getDatabase(application);
+            INSTANCE.myWeatherDao = db.myWeatherDao();
             INSTANCE.client = RetrofitClient.getApi(APIInterface.BASE_URL);
-            INSTANCE.forecast = new MutableLiveData<>();
         }
         return INSTANCE;
     }
-    public interface LoadData<T> {
-        void onData(T data);
 
-        void onFailure();
+    public void insert(MyWeather weather) {
+        new insertAsyncTask(myWeatherDao).execute(weather);
     }
 
-    public LiveData<Data> getForecast(){
+    private static class insertAsyncTask extends AsyncTask<MyWeather, Void, Void> {
+
+        private MyWeatherDao mAsyncTaskDao;
+
+        insertAsyncTask(MyWeatherDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final MyWeather... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    public LiveData<java.util.List<MyWeather>> getForecast(String city){
+        forecast = myWeatherDao.getWeatherByCity(city);
         return forecast;
     }
 
-    public void setForecast(Data data){
-        forecast.setValue(data);
-    }
+    public void loadData(final String city) {
 
-    public void loadData(final LoadData<Data> callback, String city) {
+            Call<Data> call = client.getWeaterByCity(city, APIInterface.APP_ID);
+            call.enqueue(new Callback<Data>() {
+                @Override
+                public void onResponse(Call<Data> call, Response<Data> response) {
+                    if (response.body() == null) {
+                        return;
+                    }
+                    Data data = response.body();
+                    java.util.List<MyWeather> weatherList = new ArrayList<>();
+                    MyWeather myWeather;
 
-        Call<Data> call = client.getWeaterByCity(city, APIInterface.APP_ID);
-        call.enqueue(new Callback<Data>() {
-            @Override
-            public void onResponse(Call<Data> call, Response<Data> response) {
-                if (response.body() == null) {
-                    callback.onFailure();
-                    return;
+                    for (List l : data.getList()) {
+                        myWeather = new MyWeather(data.getCity().getName(), l);
+                        insert(myWeather);
+                        weatherList.add(myWeather);
+                    }
                 }
-                callback.onData(response.body());
-            }
 
-            @Override
-            public void onFailure(Call<Data> call, Throwable t) {
-                callback.onFailure();
-            }
-        });
+                @Override
+                public void onFailure(Call<Data> call, Throwable t) {
+
+                }
+            });
     }
 }
