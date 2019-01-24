@@ -1,31 +1,22 @@
 package com.oleksandr.havryliuk.weatherapp;
 
-import org.ocpsoft.prettytime.PrettyTime;
+import com.oleksandr.havryliuk.weatherapp.models.Data;
+import com.oleksandr.havryliuk.weatherapp.room.MyWeather;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Helper {
-    public static String DateToTimeFormat(String oldstringDate){
-        PrettyTime p = new PrettyTime(new Locale(getCountry()));
-        String isTime = null;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",
-                    Locale.ENGLISH);
-            Date date = sdf.parse(oldstringDate);
-            isTime = p.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+    public static List<MyWeather> weatherConverter(Data data){
+        java.util.List<MyWeather> weatherList = new ArrayList<>();
+        MyWeather myWeather;
+
+        for (com.oleksandr.havryliuk.weatherapp.models.List l : data.getList()) {
+            myWeather = new MyWeather(data.getCity().getName(), l);
+            weatherList.add(myWeather);
         }
 
-        return isTime;
-    }
-
-    public static String getCountry(){
-        Locale locale = Locale.getDefault();
-        String country = String.valueOf(locale.getCountry());
-        return country.toLowerCase();
+        return weatherList;
     }
 }

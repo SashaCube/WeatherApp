@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             if(adapter != null) {
                 adapter.clear();
             }
-            cityTv.setText("Try another city");
+            cityTv.setText("...");
             return;
         }
         cityTv.setText(data.get(0).getCity());

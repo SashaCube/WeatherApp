@@ -10,7 +10,7 @@ import com.oleksandr.havryliuk.weatherapp.models.List;
 @Entity(tableName = "weather_table")
 public class MyWeather {
 
-    public MyWeather(@NonNull String city, Integer time, String main, Double temp,
+    public MyWeather(@NonNull String city, String time, String main, Double temp,
                      Integer humidity, Double pressure, Integer cloudiness) {
         this.city = city;
         this.time = time;
@@ -23,7 +23,7 @@ public class MyWeather {
 
     public MyWeather(String city, List list) {
         this.city = city;
-        this.time = list.getDt();
+        this.time = list.getDtTxt();
         this.main = list.getWeather().get(0).getMain();
         this.temp = list.getMain().getTemp();
         this.humidity = list.getMain().getHumidity();
@@ -38,7 +38,7 @@ public class MyWeather {
     private String city;
 
     @ColumnInfo(name = "time")
-    private Integer time;
+    private String time;
 
     @ColumnInfo(name = "main")
     private String main;
@@ -72,11 +72,11 @@ public class MyWeather {
         this.city = city;
     }
 
-    public Integer getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Integer time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

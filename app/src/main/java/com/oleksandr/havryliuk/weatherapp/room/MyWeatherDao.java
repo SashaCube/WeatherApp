@@ -21,4 +21,7 @@ public interface MyWeatherDao {
 
         @Query("SELECT * FROM weather_table WHERE city = :city")
         LiveData<List<MyWeather>> getWeatherByCity(String city);
+
+        @Query("DELETE FROM weather_table WHERE city = :city")
+        void deleteByCity(String city);
 }

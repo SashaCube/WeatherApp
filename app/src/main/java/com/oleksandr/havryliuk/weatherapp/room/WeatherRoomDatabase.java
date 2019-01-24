@@ -50,9 +50,6 @@ public abstract class WeatherRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mDao.insert(new MyWeather("lviv", 234, "snow", 1.0, 1, 1.0, 1));
-            mDao.insert(new MyWeather("kiev", 234, "rain", 1.0, 1, 1.0, 1));
-
             return null;
         }
     }
