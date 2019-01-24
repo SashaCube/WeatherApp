@@ -1,5 +1,8 @@
 package com.oleksandr.havryliuk.weatherapp;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -12,13 +15,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.oleksandr.havryliuk.weatherapp.models.Data;
-import com.oleksandr.havryliuk.weatherapp.models.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private Repository repository;
+    private ForecastViewModel forecastViewModel;
+
     private EditText cityEt;
     private Button button;
     private RecyclerView recyclerView;
@@ -29,7 +33,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        repository = new Repository();
+        repository = Repository.getRepository();
+
+        forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel.class);
+        forecastViewModel.getForecast().observe(this, new Observer<Data>() {
+            @Override
+            public void onChanged(@Nullable Data data) {
+                onDataUpdate(data);
+            }
+        });
+
         initView();
     }
 
@@ -48,13 +61,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String city = cityEt.getText().toString();
-                cityTv.setText(city);
 
-                repository.loadData(new Repository.LoadData<java.util.List<List>>() {
+                repository.loadData(new Repository.LoadData<Data>() {
                     @Override
-                    public void onData(java.util.List<List> data) {
+                    public void onData(Data data) {
                         Log.d(TAG, "onData received");
-                        onDataUpdate(data);
+                        repository.setForecast(data);
                     }
 
                     @Override
@@ -66,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void onDataUpdate(java.util.List<List> data) {
-        WeatherAdapter adapter = new WeatherAdapter(data, this);
+    private void onDataUpdate(Data data) {
+        cityTv.setText(data.getCity().getName());
+
+        WeatherAdapter adapter = new WeatherAdapter(data.getList(), this);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
