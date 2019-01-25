@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.oleksandr.havryliuk.weatherapp.room.MyWeather;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 
@@ -37,9 +38,12 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.MyViewHo
 
         MyWeather model = lists.get(i);
 
-        viewHolder.time.setText(model.getTime().toString());
+        viewHolder.time.setText(Helper.dateTimeConverter(model.getTime()));
         viewHolder.main.setText(model.getMain());
-        viewHolder.temp.setText(model.getTemp() + " K");
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        viewHolder.temp.setText(df.format(Helper.kelvinToCelsius(model.getTemp())) + "°C");
+
         viewHolder.humidity.setText(model.getHumidity() + "%");
         viewHolder.cloudiness.setText(model.getCloudiness() + "%");
         viewHolder.pressure.setText(model.getPressure().toString());
