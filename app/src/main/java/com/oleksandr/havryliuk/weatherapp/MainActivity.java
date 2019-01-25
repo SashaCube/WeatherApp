@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.oleksandr.havryliuk.weatherapp.room.MyWeather;
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ForecastViewModel forecastViewModel;
 
-    private EditText cityEt;
+    private AutoCompleteTextView cityAutoComplete;
     private Button button;
     private RecyclerView recyclerView;
     private TextView cityTv;
@@ -34,22 +35,30 @@ public class MainActivity extends AppCompatActivity {
 
     public void initView() {
 
+        // viewModel
         forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel.class);
         forecastViewModel.getForecast().observe(this, data -> {
             onDataUpdate(data);
         });
 
+        // autocomplete
+        cityAutoComplete = findViewById(R.id.autocomplete_cities);
+        String[] cities = getResources().getStringArray(R.array.cities_array);
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cities);
+        cityAutoComplete.setAdapter(adapter);
+
+        // recyclerView
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
 
-        cityEt = findViewById(R.id.city_et);
         cityTv = findViewById(R.id.city_tv);
         button = findViewById(R.id.button);
 
         button.setOnClickListener(v -> {
-            String city = cityEt.getText().toString();
+            String city = cityAutoComplete.getText().toString();
             forecastViewModel.setInput(city);
         });
     }
